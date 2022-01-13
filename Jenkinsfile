@@ -11,6 +11,18 @@ pipeline {
                 }
             }
            }
+           stage('sonar') {
+                steps {
+		            script{
+                    dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
+                    sh'mvn clean verify sonar:sonar \
+                      -Dsonar.projectKey=ejemplo-maven \
+                      -Dsonar.host.url=http://localhost:9000 \
+                      -Dsonar.login=9dab1a1d6328408762c2c87bf85cee8064f9aafd'
+                    }
+                }
+            }
+           }
 
           stage('test') {
                 steps {
