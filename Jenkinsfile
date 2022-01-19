@@ -2,26 +2,14 @@ pipeline {
     agent any
 
     stages {
-        stage('Compile') {
+        stage('Donwload-Nexus') {
             steps {
                 script {
-                    bat "mvn clean compile -e"
+						bat "curl -X GET -u admin:Dominga.2404 http://527f-190-95-121-196.ngrok.io/repository/test-repo/com/devopsusach2020/DevOpsUsach2020/0.0.1/DevOpsUsach2020-0.0.1.jar -O"
                 }
             }
         }
-        
-        	
-		stage('Sonar') {
-            steps {
-                script {
-                    def scannerHome = tool 'Sonar-scanner';
-                    withSonarQubeEnv('sonnarqube-server') {
-                        bat "${scannerHome}/bin/Sonar-scanner -Dsonar.projectKey=ejemplo-maven1 -Dsonar.sources=src -Dsonar.java.binaries=build"
-		            }
-                }
-			}
-		}
-		  
+
         stage('Test') {
             steps {
                 script {
@@ -44,6 +32,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Upload to Nexus') {
+             steps {
+                 bat 'echo ${WORKSPACE}'
+                 script {
+                     nexusPublisher nexusInstanceId: 'nexus_local', nexusRepositoryId: 'taller10', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: "${WORKSPACE}/DevOpsUsach2020-0.0.1.jar"]], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: '1.0.0']]]
+                 }
+             }
+         }
+         
         stage('Test Applications') {
             steps {
                 script {
