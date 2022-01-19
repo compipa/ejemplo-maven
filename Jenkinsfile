@@ -5,9 +5,7 @@ pipeline {
             stage('compile') {
                 steps {
 		            script{
-                    dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'./mvnw clean test -e'
-                    }
+                    bat'./mvnw.cmd clean compile -e'
                 }
             }
            }
@@ -15,39 +13,25 @@ pipeline {
           stage('test') {
                 steps {
 		            script{
-                    dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'./mvnw clean test -e'
-                    }
+                    bat'./mvnw.cmd clean test -e'
                 }
             }
            }
         stage('jar') {
                 steps {
 		            script{
-                    dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'./mvnw clean package -e'
-                    }
+                    bat'./mvnw.cmd clean package -e'
                 }
             }
            }
          stage('run') {
                 steps {
 		            script{
-                        dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'nohup bash mvnw spring-boot:run &'
+                    bat'start /min mvnw.cmd spring-boot:run &'
                     sleep 20 
-                }
-                }
-            }
-           }
-        stage('testing') {
-                steps {
-		            script{
-                    sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
                 }
             }
            }
     }
 }
-
 
