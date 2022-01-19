@@ -9,18 +9,7 @@ pipeline {
                 }
             }
         }
-		
-		stage('Sonar') {
-            steps {
-                script {
-                    def scannerHome = tool 'sonar-scanner';
-                    withSonarQubeEnv('sonar-server') {
-                        bat "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-maven-developer -Dsonar.sources=src -Dsonar.java.binaries=build"
-		            }
-                }
-			}
-		}
-          
+		  
         stage('Test') {
             steps {
                 script {
