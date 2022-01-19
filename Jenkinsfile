@@ -2,64 +2,54 @@ pipeline {
     agent any
 
     stages {
-            stage('compile') {
-                steps {
-		            script{
-                    dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'./mvnw clean test -e'
-                    }
+        stage('Compile') {
+            steps {
+                script {
+                    bat "mvn clean compile -e"
                 }
             }
-           }
-           stage('sonar') {
-                steps {
-		            script{
-                    dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'mvn clean verify sonar:sonar \
-                      -Dsonar.projectKey=ejemplo-maven \
-                      -Dsonar.host.url=http://localhost:9000 \
-                      -Dsonar.login=9dab1a1d6328408762c2c87bf85cee8064f9aafd'
-                    }
+        }
+		
+		stage('Sonar') {
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner';
+                    withSonarQubeEnv('sonar-server') {
+                        bat "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-maven-developer -Dsonar.sources=src -Dsonar.java.binaries=build"
+		            }
+                }
+			}
+		}
+          
+        stage('Test') {
+            steps {
+                script {
+                    bat "mvn clean test -e"
                 }
             }
-           }
-
-          stage('test') {
-                steps {
-		            script{
-                    dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'./mvnw clean test -e'
-                    }
+        }
+	
+        stage('Package') {
+            steps {
+                script {
+                    bat "mvn clean package -e"
                 }
             }
-           }
-        stage('jar') {
-                steps {
-		            script{
-                    dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'./mvnw clean package -e'
-                    }
+        }
+        stage('Run') {
+            steps {
+                script {
+                    bat "start /min mvn spring-boot:run &"
                 }
             }
-           }
-         stage('run') {
-                steps {
-		            script{
-                        dir('/Users/jorgeignacioramireevans/Devops/ejemplo-maven'){
-                    sh'nohup bash mvnw spring-boot:run &'
-                    sleep 20 
-                }
+        }
+        stage('Test Applications') {
+            steps {
+                script {
+                    bat "start chrome http://localhost:8081/rest/mscovid/test?msg=testing"
+					
                 }
             }
-           }
-        stage('testing') {
-                steps {
-		            script{
-                    sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
-                }
-            }
-           }
+        }
     }
 }
-
-
