@@ -38,7 +38,7 @@ pipeline {
         stage('Upload to Nexus') {
              steps {
                  script {
-                    nexusPublisher nexusInstanceId: 'Nexus-test', nexusRepositoryId: 'test-repo', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'C:/ProgramData/Jenkins/.jenkins/workspace/peline_multibranch_feature-sonar/build/DevOpsUsach2020-1.0.0']], mavenCoordinate: [artifactId: 'DevOpsUsach20200', groupId: 'com.devopsusach2020', packaging: 'jar', version: '1.0.0']]]
+                    nexusPublisher nexusInstanceId: 'Nexus-test', nexusRepositoryId: 'test-repo', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'C:/ProgramData/Jenkins/.jenkins/workspace/peline_multibranch_featune-nexus/build/DevOpsUsach2020-1.0.0.jar']], mavenCoordinate: [artifactId: 'DevOpsUsach20200', groupId: 'com.devopsusach2020', packaging: 'jar', version: '1.0.0']]]
                  }
              }
          }
