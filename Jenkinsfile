@@ -27,16 +27,20 @@ pipeline {
                 }
             }
         }
+          stage('Package') {
+            steps {
+                script {
+                    bat "mvn clean package -e"
+                }
+            }
+        }
 
         stage('Upload to Nexus') {
              steps {
-                 bat 'echo ${WORKSPACE}'
                  script {
-                    nexusPublisher nexusInstanceId: 'Nexus-test', nexusRepositoryId: 'test-repo', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'DevOpsUsach2020-0.0.1']], mavenCoordinate: [artifactId: 'DevOpsUsach20200', groupId: 'com.devopsusach2020', packaging: 'jar', version: '1.0.0']]]
+                    nexusPublisher nexusInstanceId: 'Nexus-test', nexusRepositoryId: 'test-repo', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'C:/ProgramData/Jenkins/.jenkins/workspace/peline_multibranch_feature-sonar/build/DevOpsUsach2020-1.0.0']], mavenCoordinate: [artifactId: 'DevOpsUsach20200', groupId: 'com.devopsusach2020', packaging: 'jar', version: '1.0.0']]]
                  }
              }
          }
-
-
     }
 }
